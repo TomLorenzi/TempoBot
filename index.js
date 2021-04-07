@@ -4,6 +4,7 @@ const app = express();
 
 const request = require('request');
 const https = require('https');
+const http = require('http');
 
 // Load up the discord.js library
 const Discord = require("discord.js");
@@ -15,13 +16,28 @@ app.listen(8080, () => {
     console.log('Serveur à l\'écoute')
 });
 
-app.get('/parkings', (req,res) => {
-    
+app.get('/test', (req, res) => {
+    const craftId = req.query.craftId;
+    const itemName = req.query.itemName;
+    let craftChannel = client.channels.cache.get('829389652351385641');
+
+    const craftEmbed = new Discord.MessageEmbed()
+                .setTitle(`Un nouveau craft à été créé`)
+                .setColor('#9123ff')
+                .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
+                .addField(`Item :`, itemName)
+                .addField(`Voir le craft :`, `${config.serverUrl}/craft/id/${craftId}`);
+
+    craftChannel.send(craftEmbed);
+    //Example to fetch channel
+    /*client.channels.fetch('829389652351385641')
+        .then(channel => channel.send('slt'));*/
+    res.sendStatus(200);
 })
 
 client.on("ready", () => {
     // Vérification que bot ready
-    console.log(`Le bot fonctionne, avec ${client.users.size} utilisateurs, dans ${client.channels.size} channels de ${client.guilds.size} serveur(s).`);
+    console.log(`Bot is running`);
 
     client.user.setActivity(`Bot by Nira`);
 });
@@ -56,8 +72,45 @@ client.on("message", async message => {
                 itemName += ' ';
             }
         });
+        const encodedItem = encodeURIComponent(itemName);
+
+        http.get(`${config.serverUrl}/api/getCraftItem/${encodedItem}?apiKey=${config.apiKey}`, (resp) => {
+            let data = '';
+
+            // A chunk of data has been received.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            }).on('end', () => {
+                const itemEmbed = new Discord.MessageEmbed()
+                    .setTitle(`Crafts liés à ${itemName}`)
+                    .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg');
+                const listCraftId = JSON.parse(data);
+            
+                if (Array.isArray(listCraftId)) {
+                    itemEmbed.setColor('#9123ff');
+                    listCraftId.forEach(craftId => {
+                        let i = 0;
+                        if (i >= 5) {
+                            itemEmbed.addField(`Voir plus de craft :`, `${config.serverUrl}/item`);
+                            return false;
+                        }
+                        itemEmbed.addField(`Craft ${craftId}`, `${config.serverUrl}/craft/id/${craftId}`);
+                        i++;
+                    });
+                } else {
+                    itemEmbed.setColor('#ff0000');
+                    itemEmbed.addField('Erreur', listCraftId);
+                }
+                
+                message.channel.send(itemEmbed);
+            });
+        }).on("error", (err) => {
+            console.log("Error: " + err.message);
+        });
+    }
+
+    if ('test' === command) {
         
-        message.channel.send(itemName);
     }
 
     if(command === 'ping') {
