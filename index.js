@@ -19,7 +19,7 @@ app.listen(8080, () => {
 app.get('/newCraft', (req, res) => {
     const craftId = req.query.craftId;
     const itemName = req.query.itemName;
-    let craftChannel = client.channels.cache.get('829389652351385641');
+    let craftChannel = client.channels.cache.get(config.broadcastChannel);
 
     const craftEmbed = new Discord.MessageEmbed()
         .setTitle(`Un nouveau craft à été créé`)
