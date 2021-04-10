@@ -252,6 +252,52 @@ client.on("message", async message => {
                         .setTitle('Erreur')
                         .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
                         .setColor('#ff0000')
+                        .addField('Erreur', response.message);
+                }
+                
+                message.channel.send(subscribeEmbed);
+            });
+        }).on("error", (err) => {
+            console.log("Error: " + err.message);
+        });
+    }
+
+    if ('reset' === command) {
+        if (config.commandChannel !== message.channel.id) {
+            return;
+        }
+        let itemName = '';
+        let i = 0;
+        args.forEach(namePart => {
+            itemName += namePart;
+            i++;
+            if (args.length > i) {
+                itemName += ' ';
+            }
+        });
+
+        http.get(`${config.serverUrl}/api/resetFollow?apiKey=${config.apiKey}&discordId=${id}`, (resp) => {
+            let data = '';
+
+            // A chunk of data has been received.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            }).on('end', () => {
+                
+                const response = JSON.parse(data);
+            
+                const subscribeEmbed = new Discord.MessageEmbed();
+                if (response.success) {
+                    subscribeEmbed
+                        .setTitle('Suppressions des abonnements')
+                        .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
+                        .setColor('#32CD32')
+                        .addField('Succès', response.message);
+                } else {
+                    subscribeEmbed
+                        .setTitle('Erreur')
+                        .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
+                        .setColor('#ff0000')
                         .addField('Suppression échoué', response.message);
                 }
                 
