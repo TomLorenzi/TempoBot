@@ -50,6 +50,8 @@ app.get('/notifications', function (req, res) {
         .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
         .addField(`Item :`, req.query.itemName)
         .addField(`Voir le craft :`, `${config.serverUrl}/craft/id/${req.query.craftId}`);
+    
+        console.log(req.query.discordIdList);
     req.query.discordIdList.forEach(discordId => {
         client.users.fetch(discordId).then(
             user => user.send(itemEmbed)
@@ -76,7 +78,7 @@ client.on("message", async message => {
 
 
     if (command === 'craft') {
-        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id && config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
@@ -125,7 +127,7 @@ client.on("message", async message => {
     }
 
     if ('follow' === command) {
-        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id && config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
@@ -171,7 +173,7 @@ client.on("message", async message => {
     }
 
     if ('stop' === command) {
-        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id && config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
@@ -217,7 +219,7 @@ client.on("message", async message => {
     }
 
     if ('list' === command) {
-        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id && config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
@@ -267,7 +269,7 @@ client.on("message", async message => {
     }
 
     if ('reset' === command) {
-        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id && config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
