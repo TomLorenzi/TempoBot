@@ -17,6 +17,7 @@ app.listen(8080, () => {
 });
 
 app.get('/newCraft', (req, res) => {
+    res.sendStatus(200);
     const craftId = req.query.craftId;
     const itemName = req.query.itemName;
     let craftChannel = client.channels.cache.get(config.broadcastChannel);
@@ -29,10 +30,13 @@ app.get('/newCraft', (req, res) => {
         .addField(`Voir le craft :`, `${config.serverUrl}/craft/id/${craftId}`);
 
     craftChannel.send(craftEmbed);
+    let customChannel = client.channels.cache.get(config.customChannel);
+    customChannel.send(craftEmbed);
+
     //Example to fetch channel
     /*client.channels.fetch('829389652351385641')
         .then(channel => channel.send('slt'));*/
-    res.sendStatus(200);
+    
 });
 
 app.get('/notifications', function (req, res) {
@@ -72,7 +76,7 @@ client.on("message", async message => {
 
 
     if (command === 'craft') {
-        if (config.commandChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
@@ -121,7 +125,7 @@ client.on("message", async message => {
     }
 
     if ('follow' === command) {
-        if (config.commandChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
@@ -167,7 +171,7 @@ client.on("message", async message => {
     }
 
     if ('stop' === command) {
-        if (config.commandChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
@@ -213,7 +217,7 @@ client.on("message", async message => {
     }
 
     if ('list' === command) {
-        if (config.commandChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
@@ -263,7 +267,7 @@ client.on("message", async message => {
     }
 
     if ('reset' === command) {
-        if (config.commandChannel !== message.channel.id) {
+        if (config.commandChannel !== message.channel.id || config.customChannel !== message.channel.id) {
             return;
         }
         let itemName = '';
