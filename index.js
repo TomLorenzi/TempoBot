@@ -52,7 +52,8 @@ app.get('/notifications', function (req, res) {
         .addField(`Voir le craft :`, `${config.serverUrl}/craft/id/${req.query.craftId}`);
     
         Object.keys(req.query.discordIdList).forEach(discordId => {
-        client.users.fetch(discordId).then(
+        const [key, userId] = discordId;
+        client.users.fetch(userId).then(
             user => user.send(itemEmbed)
         )
     });
