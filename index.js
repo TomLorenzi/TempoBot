@@ -53,6 +53,7 @@ app.get('/notifications', function (req, res) {
     
         Object.keys(req.query.discordIdList).forEach(discordId => {
         const [key, userId] = discordId;
+        console.log(discordId);
         client.users.fetch(userId).then(
             user => user.send(itemEmbed)
         )
@@ -91,7 +92,7 @@ client.on("message", async message => {
             }
         });
 
-        http.get(`${config.serverUrl}/api/getCraftItem?apiKey=${config.apiKey}&itemName=${itemName}`, (resp) => {
+        https.get(`${config.serverUrl}/api/getCraftItem?apiKey=${config.apiKey}&itemName=${itemName}`, (resp) => {
             let data = '';
 
             // A chunk of data has been received.
@@ -140,7 +141,7 @@ client.on("message", async message => {
             }
         });
 
-        http.get(`${config.serverUrl}/api/followItem?apiKey=${config.apiKey}&discordId=${id}&itemName=${itemName}`, (resp) => {
+        https.get(`${config.serverUrl}/api/followItem?apiKey=${config.apiKey}&discordId=${id}&itemName=${itemName}`, (resp) => {
             let data = '';
 
             // A chunk of data has been received.
@@ -186,7 +187,7 @@ client.on("message", async message => {
             }
         });
 
-        http.get(`${config.serverUrl}/api/stopFollowItem?apiKey=${config.apiKey}&discordId=${id}&itemName=${itemName}`, (resp) => {
+        https.get(`${config.serverUrl}/api/stopFollowItem?apiKey=${config.apiKey}&discordId=${id}&itemName=${itemName}`, (resp) => {
             let data = '';
 
             // A chunk of data has been received.
@@ -232,7 +233,7 @@ client.on("message", async message => {
             }
         });
 
-        http.get(`${config.serverUrl}/api/followList?apiKey=${config.apiKey}&discordId=${id}`, (resp) => {
+        https.get(`${config.serverUrl}/api/followList?apiKey=${config.apiKey}&discordId=${id}`, (resp) => {
             let data = '';
 
             // A chunk of data has been received.
@@ -282,7 +283,7 @@ client.on("message", async message => {
             }
         });
 
-        http.get(`${config.serverUrl}/api/resetFollow?apiKey=${config.apiKey}&discordId=${id}`, (resp) => {
+        https.get(`${config.serverUrl}/api/resetFollow?apiKey=${config.apiKey}&discordId=${id}`, (resp) => {
             let data = '';
 
             // A chunk of data has been received.
