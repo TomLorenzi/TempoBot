@@ -51,6 +51,9 @@ app.get('/notifications', function (req, res) {
         .addField(`Item :`, req.query.itemName)
         .addField(`Voir le craft :`, `${config.serverUrl}/craft/id/${req.query.craftId}`);
     
+        if ('undefined' !== typeof req.query.discordIdList || null === req.query.discordIdList) {
+            return;
+        }
         Object.keys(req.query.discordIdList).forEach(discordId => {
         const userId = req.query.discordIdList[discordId];
             console.log(userId);
