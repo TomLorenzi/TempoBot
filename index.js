@@ -106,9 +106,9 @@ client.on("message", async message => {
                             }
                             i++;
                             parsedText[j] += ` ${lines[i].LineText}`;
-                            j++;
                             i++;
                         }
+                        j++;
                     }
                     let cards = encodeURIComponent(JSON.stringify(parsedText));
                     http.get(`${config.serverUrl}/api/newCraft?apiKey=${config.apiKey}&cards=${cards}&itemName=${itemName}`, (resp) => {
