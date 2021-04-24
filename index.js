@@ -125,7 +125,7 @@ client.on("message", async message => {
                             if ('string' !== typeof data) {
                                 return;
                             }
-                            if (/^[\],:{}\s]*$/.test(text.replace(/\\["\\\/bfnrtu]/g, '@').
+                            if (/^[\],:{}\s]*$/.test(data.replace(/\\["\\\/bfnrtu]/g, '@').
                                 replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
                                 replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
                                     console.log(data);
@@ -141,15 +141,8 @@ client.on("message", async message => {
                                     .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
                                     .setColor('#32CD32')
                                     .addField('Insert réussit', response.message);
-                            } else {
-                                subscribeEmbed
-                                    .setTitle('Erreur')
-                                    .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
-                                    .setColor('#ff0000')
-                                    .addField('Insertion échoué', response.message);
-                            }
-                            
-                            message.channel.send(subscribeEmbed);
+                                    message.channel.send(subscribeEmbed);
+                            } 
                         });
                     }).on("error", (err) => {
                         console.log("Error: " + err.message);
