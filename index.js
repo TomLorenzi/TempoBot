@@ -72,12 +72,89 @@ client.on("message", async message => {
 
     const id = message.member.id;
 
+    if (config.newCraft === message.channel.id || config.customChannel === message.channel.id) {
+        if ('undefined' !== typeof message.attachments && message.attachments !== null) {
+            message.attachments.forEach(attachment => {
+            // do something with the attachment
+            const url = attachment.url;
+            https.get(`https://api.ocr.space/parse/imageurl?apikey=${config.ocrApiKey}&url=${url}&isOverlayRequired=true`, (resp) => {
+                let data = '';
+        
+                // A chunk of data has been received.
+                resp.on('data', (chunk) => {
+                    data += chunk;
+                });
+        
+                // The whole response has been received. Print out the result.
+                resp.on('end', () => {
+                    let jsonData = JSON.parse(data);
+                    let lines = jsonData.ParsedResults[0].TextOverlay.Lines;
+                    let i = 3;
+                    let parsedText = [];
+                    let itemName = lines[2].LineText;
+        
+                    let j = 0;
+                    let k = 0;
+                    while (i < lines.length) {
+                        parsedText.push(lines[i].LineText);
+                        k = i + 1;
+                        if ('undefined' !== typeof lines[k] && (lines[i].MinTop + 5) > lines[k].MinTop && (lines[i].MinTop - 5) < lines[k].MinTop) {
+                            i++;
+                        } else {
+                            if ('undefined' === typeof lines[k]) {
+                                break;
+                            }
+                            i++;
+                            parsedText[j] += ` ${lines[i].LineText}`;
+                            j++;
+                            i++;
+                        }
+                    }
+                    let cards = encodeURIComponent(JSON.stringify(parsedText));
+                    http.get(`${config.serverUrl}/api/newCraft?apiKey=${config.apiKey}&cards=${cards}&itemName=${itemName}`, (resp) => {
+                        let data = '';
+            
+                        // A chunk of data has been received.
+                        resp.on('data', (chunk) => {
+                            data += chunk;
+                        }).on('end', () => {
+                            
+                            const response = JSON.parse(data);
+                        
+                            const subscribeEmbed = new Discord.MessageEmbed();
+                            if (response.success) {
+                                subscribeEmbed
+                                    .setTitle('Insertion confirmé')
+                                    .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
+                                    .setColor('#32CD32')
+                                    .addField('Insert réussit', response.message);
+                            } else {
+                                subscribeEmbed
+                                    .setTitle('Erreur')
+                                    .setAuthor('TempoBot', 'https://i.imgur.com/1VxMWX9.jpg')
+                                    .setColor('#ff0000')
+                                    .addField('Insertion échoué', response.message);
+                            }
+                            
+                            message.channel.send(subscribeEmbed);
+                        });
+                    }).on("error", (err) => {
+                        console.log("Error: " + err.message);
+                    });
+                });
+        
+                }).on("error", (err) => {
+                    console.log("Error: " + err.message);
+                });
+            });
+        }
+    }
+
     if(message.content.indexOf(config.prefix) !== 0) return;
 
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
-
-
+    
     if (command === 'craft') {
         if (config.commandChannel !== message.channel.id && config.customChannel !== message.channel.id) {
             return;
