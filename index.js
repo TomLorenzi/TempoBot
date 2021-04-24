@@ -101,7 +101,7 @@ client.on("message", async message => {
                     while (i < lines.length) {
                         parsedText.push(lines[i].LineText);
                         k = i + 1;
-                        if ('undefined' === typeof lines[k] && (lines[i].MinTop + 5) > lines[k].MinTop && (lines[i].MinTop - 5) < lines[k].MinTop) {
+                        if ('undefined' !== typeof lines[k] && (lines[i].MinTop + 5) > lines[k].MinTop && (lines[i].MinTop - 5) < lines[k].MinTop) {
                             i++;
                         } else {
                             if ('undefined' === typeof lines[k]) {
