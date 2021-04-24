@@ -114,7 +114,7 @@ client.on("message", async message => {
                         j++;
                     }
                     let cards = encodeURIComponent(JSON.stringify(parsedText));
-                    http.get(`${config.serverUrl}/api/newCraft?apiKey=${config.apiKey}&cards=${cards}&itemName=${itemName}`, (resp) => {
+                    https.get(`${config.serverUrl}/api/newCraft?apiKey=${config.apiKey}&cards=${cards}&itemName=${itemName}`, (resp) => {
                         let data = '';
             
                         // A chunk of data has been received.
