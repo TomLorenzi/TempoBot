@@ -125,6 +125,13 @@ client.on("message", async message => {
                             if ('string' !== typeof data) {
                                 return;
                             }
+                            if (/^[\],:{}\s]*$/.test(text.replace(/\\["\\\/bfnrtu]/g, '@').
+                                replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+                                replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+                                    console.log(data);
+                            } else {
+                                return;
+                            }
                             const response = JSON.parse(data);
                             
                             const subscribeEmbed = new Discord.MessageEmbed();
