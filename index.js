@@ -51,7 +51,7 @@ app.get('/notifications', function (req, res) {
         .addField(`Item :`, req.query.itemName)
         .addField(`Voir le craft :`, `${config.serverUrl}/craft/id/${req.query.craftId}`);
     
-        if ('undefined' !== typeof req.query.discordIdList || null === req.query.discordIdList) {
+        if ('undefined' === typeof req.query.discordIdList || null === req.query.discordIdList) {
             return;
         }
         Object.keys(req.query.discordIdList).forEach(discordId => {
@@ -101,7 +101,7 @@ client.on("message", async message => {
                     while (i < lines.length) {
                         parsedText.push(lines[i].LineText);
                         k = i + 1;
-                        if ('undefined' !== typeof lines[k] && (lines[i].MinTop + 5) > lines[k].MinTop && (lines[i].MinTop - 5) < lines[k].MinTop) {
+                        if ('undefined' === typeof lines[k] && (lines[i].MinTop + 5) > lines[k].MinTop && (lines[i].MinTop - 5) < lines[k].MinTop) {
                             i++;
                         } else {
                             if ('undefined' === typeof lines[k]) {
@@ -122,8 +122,11 @@ client.on("message", async message => {
                             data += chunk;
                         }).on('end', () => {
                             
+                            if ('string' !== typeof data) {
+                                return;
+                            }
                             const response = JSON.parse(data);
-                        
+                            
                             const subscribeEmbed = new Discord.MessageEmbed();
                             if (response.success) {
                                 subscribeEmbed
